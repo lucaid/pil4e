@@ -1,0 +1,6 @@
+#+TITLE: README
+#+AUTHOR: Drew Beaches
+
+** Programming in Lua (4th ed) - The adventure
+
+- Central repository for uploading my code and notes while going through Programming in Lua Fourth Edition as a novice programmer.

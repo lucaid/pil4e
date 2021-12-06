@@ -1,0 +1,52 @@
+#+TITLE: Chapter 3 Notes
+
+* Chapter 3: Numbers
+
+*** 3.1 Numerals
+- Numbers with decimal or exponent are floats, otherwise automatically ints. Both int and float have the data type of "number"
+- ints and floats with same value will also compare as equal. I.e. /1 == 1.0 --> true/
+- On rare occasion distinction is necessary, /math.type()/ will distinguish
+- Lua supports hexadecimal with a /0x/ prefix. Also somewhat uniquely supports floating-point hex which can have fractional and binary component, prefixed by /p/ or /P/. ex. /0xff --> 255/ /0x1A3 --> 419/ /0xa.bp2 --> 42.75/
+  - Lua can translate TO this with /string.format/ with the "%a" option. ex. /string.format("%a", 419) --> 0x1.a3p+8/
+
+*** 3.2 Arithmetic Operators
+- Lua supports standard set of operators: +, -, *, /, negation.
+  - also supports Floor division (//), Modulo (%), and Exponentiation (^)
+- Addition, subtraction, multiplication, and negation of two integers will always return an integer. In the event of mixed operands, integers will be converted to floats.
+- Division always converts to floats
+- For integer division, use Floor Division (//). This rounds the quotient towards negative infinity, and thus can follow the rules of other operators with respect to covnersion.
+- Modulo is defined by the following: /a % b == a - ((a //b) * b)/
+  - This also follows rules of general operators.
+  - The result will always have the sign of the second operand.
+  - This has some interesting uses. For example, /x-x%.001/ will return x with exactly three decimal digits.
+    - Can also be used to normalize angles.
+      - /angle % 360/ for degrees
+      - /angle % (2*math.pi)/ for radians
+- Finally, exponents simple work as expected. /^/ to denote, they always convert to floats, and /x^0.5/ is square root. (/x^(1/3)/ is cubic root, etc.)
+
+*** 3.3 Relational Operators
+- In Lua: /< > <= >= == ~=/
+- Always return a boolean value
+- /==/ tests for equality, /~=/ for inequality
+- If values have different types(*), they are considered not equal
+  - *With numbers however, float vs int does not matter, it is a comparison of mathematical value.
+  - Note that despite this, it is computationally *faster* to compare values of the same type/subtype
+
+*** 3.4 The Mathematcial Library
+- Lua provides standard math library including: trig functions, logs, rounding functions, /max/ and /min/, RNG (random()), and constants "pi" and "huge"
+  - Huge is the largest representable value, "inf" on many platforms
+- Trig functions work in radians by default, /deg/ and /rad/ can convert
+**** Random-number Generator
+- math.random() is the bread and butter. Has a few options. By default, returns pseudo-random real number in the range [0,1]
+- If called with a single integer n, will generate pseudo-random real number in range [1,n]
+- If called with two integers as in /math.random(l,u)/ will generate number in range [l,u]
+- This is SEEDED generation and defaults to a seed value of 1. This can be modified with function /math.randomseed(n)/ which can take a single value.
+  - Common trick is to call /math.randomseed(os.time())/ which uses the current system time as the seed.
+**** Rounding Functions
+- Math library contains 3 rounding functions: /floor/ /ceil/ and /modf/
+  - Floor rounds towards -inf, ceil rounds towards +inf, and modf rounds towards 0
+- All return int if provided int, otherwise return float with an integral value.
+- /modf/ also returns fractional part of the number as second result (according to the footnote, functions with multiple returns will be discussed in lesson 6.1)
+- Here the text goes thru a guided problem solve to create an unbiased rounding function. See /round.lua/ for the final iteration
+
+*** 3.5 Representational Limits
